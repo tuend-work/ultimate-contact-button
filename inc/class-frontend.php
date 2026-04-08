@@ -41,8 +41,10 @@ class UCB_Frontend {
 		$style = "bottom: {$bottom}px; {$side}: {$margin}px;";
 		$style .= ( 'left' === $side ) ? 'align-items: flex-start;' : 'align-items: flex-end;';
 
+		$first_icon = ! empty( $buttons[0]['icon_svg'] ) ? $buttons[0]['icon_svg'] : ucb_get_svg( $buttons[0]['type'] );
+
 		echo '<div class="' . esc_attr( $container_class ) . '" style="' . esc_attr( $style ) . '">';
-		echo '<div class="ucb-desktop-main-btn"><span class="dashicons dashicons-phone"></span></div>';
+		echo '<div class="ucb-desktop-main-btn"><span>' . $first_icon . '</span></div>';
 		
 		$sub_btn_style = ( 'left' === $side ) ? 'align-items: flex-start;' : 'align-items: flex-end;';
 		echo '<div class="ucb-desktop-sub-buttons" style="' . esc_attr( $sub_btn_style ) . '">';
@@ -78,7 +80,16 @@ class UCB_Frontend {
 		echo '<div class="' . esc_attr( $container_class ) . '">';
 		
 		// 1. The main trigger button (Will be at the bottom due to column-reverse)
-		echo '<div class="ucb-mobile-main-btn"><span class="dashicons dashicons-phone"></span></div>';
+		$first_slot = isset( $options["mobile_slot_1"] ) ? $options["mobile_slot_1"] : array();
+		if ( ! empty( $first_slot['icon_url'] ) ) {
+			$main_icon = '<img src="' . esc_url( $first_slot['icon_url'] ) . '" />';
+		} elseif ( ! empty( $first_slot['type'] ) ) {
+			$main_icon = ucb_get_svg( $first_slot['type'] );
+		} else {
+			$main_icon = '<span class="dashicons dashicons-phone"></span>';
+		}
+		
+		echo '<div class="ucb-mobile-main-btn"><span>' . $main_icon . '</span></div>';
 
 		// 2. The sub-buttons (Will stack upwards)
 		echo '<div class="ucb-mobile-sub-buttons">';
