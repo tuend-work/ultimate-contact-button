@@ -223,31 +223,44 @@ class UCB_Settings {
 
 	private function render_mobile_manager() {
 		$options = get_option( self::OPTION_NAME );
-		// Simple fixed slots for now
-		for ( $i = 1; $i <= 5; $i++ ) {
-			$slot = isset( $options["mobile_slot_$i"] ) ? $options["mobile_slot_$i"] : array( 'type' => '', 'label' => '', 'link' => '', 'icon_url' => '' );
-			?>
-			<div class="ucb-mobile-slot">
-				<h4>Slot <?php echo $i; ?></h4>
-				<div class="ucb-field-row">
-					<select name="<?php echo esc_attr( self::OPTION_NAME . "[mobile_slot_$i][type]" ); ?>">
-						<option value="">None</option>
-						<option value="phone" <?php selected( $slot['type'], 'phone' ); ?>>Phone</option>
-						<option value="zalo" <?php selected( $slot['type'], 'zalo' ); ?>>Zalo</option>
-						<option value="messenger" <?php selected( $slot['type'], 'messenger' ); ?>>Messenger</option>
-						<option value="mail" <?php selected( $slot['type'], 'mail' ); ?>>Email</option>
-						<option value="custom" <?php selected( $slot['type'], 'custom' ); ?>>Custom</option>
-					</select>
-					<input type="text" name="<?php echo esc_attr( self::OPTION_NAME . "[mobile_slot_$i][label]" ); ?>" value="<?php echo esc_attr( $slot['label'] ); ?>" placeholder="Label" />
-					<input type="text" name="<?php echo esc_attr( self::OPTION_NAME . "[mobile_slot_$i][link]" ); ?>" value="<?php echo esc_attr( $slot['link'] ); ?>" placeholder="Link/ID" />
-				</div>
-				<div class="ucb-field-row ucb-upload-row">
-					<input type="text" class="ucb-img-url" name="<?php echo esc_attr( self::OPTION_NAME . "[mobile_slot_$i][icon_url]" ); ?>" value="<?php echo esc_attr( $slot['icon_url'] ); ?>" placeholder="Custom SVG URL" />
-					<button type="button" class="button ucb-upload-btn"><?php _e( 'Upload SVG', 'ultimate-contact-button' ); ?></button>
-				</div>
-			</div>
-			<?php
-		}
+		$buttons = isset( $options['mobile_buttons'] ) ? $options['mobile_buttons'] : array();
+		?>
+		<div id="ucb-mobile-repeater">
+			<ul class="ucb-sortable-list" id="ucb-mobile-list">
+				<?php if ( ! empty( $buttons ) ) : ?>
+					<?php foreach ( $buttons as $index => $button ) : ?>
+						<li class="ucb-list-item">
+							<span class="dashicons dashicons-move handle"></span>
+							<div class="ucb-item-fields">
+								<div class="ucb-field-row">
+									<select name="<?php echo esc_attr( self::OPTION_NAME . "[mobile_buttons][$index][type]" ); ?>">
+										<option value="phone" <?php selected( $button['type'], 'phone' ); ?>>Phone</option>
+										<option value="zalo" <?php selected( $button['type'], 'zalo' ); ?>>Zalo</option>
+										<option value="messenger" <?php selected( $button['type'], 'messenger' ); ?>>Messenger</option>
+										<option value="whatsapp" <?php selected( $button['type'], 'whatsapp' ); ?>>WhatsApp</option>
+										<option value="telegram" <?php selected( $button['type'], 'telegram' ); ?>>Telegram</option>
+										<option value="mail" <?php selected( $button['type'], 'mail' ); ?>>Email</option>
+										<option value="custom" <?php selected( $button['type'], 'custom' ); ?>>Custom</option>
+									</select>
+									<input type="text" name="<?php echo esc_attr( self::OPTION_NAME . "[mobile_buttons][$index][label]" ); ?>" value="<?php echo esc_attr( $button['label'] ); ?>" placeholder="Label" />
+									<input type="text" name="<?php echo esc_attr( self::OPTION_NAME . "[mobile_buttons][$index][link]" ); ?>" value="<?php echo esc_attr( $button['link'] ); ?>" placeholder="Link/ID" />
+								</div>
+								<div class="ucb-field-row ucb-upload-row">
+									<input type="text" class="ucb-img-url" name="<?php echo esc_attr( self::OPTION_NAME . "[mobile_buttons][$index][icon_url]" ); ?>" value="<?php echo isset( $button['icon_url'] ) ? esc_attr( $button['icon_url'] ) : ''; ?>" placeholder="Custom SVG URL" />
+									<button type="button" class="button ucb-upload-btn"><?php _e( 'Upload SVG', 'ultimate-contact-button' ); ?></button>
+								</div>
+								<div class="ucb-field-row ucb-svg-row">
+									<textarea name="<?php echo esc_attr( self::OPTION_NAME . "[mobile_buttons][$index][icon_svg]" ); ?>" placeholder="Or Paste Custom SVG Code here"><?php echo isset( $button['icon_svg'] ) ? esc_textarea( $button['icon_svg'] ) : ''; ?></textarea>
+								</div>
+							</div>
+							<button type="button" class="ucb-remove-item button-link-delete"><?php _e( 'Remove', 'ultimate-contact-button' ); ?></button>
+						</li>
+					<?php endforeach; ?>
+				<?php endif; ?>
+			</ul>
+			<button type="button" class="button tagadd" id="ucb-add-mobile-item"><?php _e( 'Add Mobile Button', 'ultimate-contact-button' ); ?></button>
+		</div>
+		<?php
 	}
 
 	public function sanitize( $input ) {
@@ -281,10 +294,8 @@ class UCB_Settings {
 			$output['desktop_buttons'] = ucb_sanitize_array( $input['desktop_buttons'] );
 		}
 
-		for ( $i = 1; $i <= 5; $i++ ) {
-			if ( isset( $input["mobile_slot_$i"] ) ) {
-				$output["mobile_slot_$i"] = ucb_sanitize_array( $input["mobile_slot_$i"] );
-			}
+		if ( isset( $input['mobile_buttons'] ) ) {
+			$output['mobile_buttons'] = ucb_sanitize_array( $input['mobile_buttons'] );
 		}
 
 		return $output;

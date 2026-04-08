@@ -77,40 +77,42 @@ class UCB_Frontend {
 	}
 
 	private function render_mobile_bar( $options ) {
-		$container_class = "ucb-mobile-container ucb-mobile-mode-click active"; // Mobile always active/click oriented for FAB
-		
+		$container_class = "ucb-mobile-container ucb-mobile-mode-click active"; 
+		$buttons = isset( $options['mobile_buttons'] ) ? $options['mobile_buttons'] : array();
+
 		echo '<div class="' . esc_attr( $container_class ) . '">';
 		
 		// 1. The main trigger button (Will be at the bottom due to column-reverse)
-		$first_slot = isset( $options["mobile_slot_1"] ) ? $options["mobile_slot_1"] : array();
-		if ( ! empty( $first_slot['icon_url'] ) ) {
-			$main_icon = '<img src="' . esc_url( $first_slot['icon_url'] ) . '" />';
-		} elseif ( ! empty( $first_slot['type'] ) ) {
-			$main_icon = ucb_get_svg( $first_slot['type'] );
-		} else {
-			$main_icon = '<span class="dashicons dashicons-phone"></span>';
+		$main_icon = '<span class="dashicons dashicons-phone"></span>';
+		if ( ! empty( $buttons ) ) {
+			$first = $buttons[0];
+			if ( ! empty( $first['icon_url'] ) ) {
+				$main_icon = '<img src="' . esc_url( $first['icon_url'] ) . '" />';
+			} elseif ( ! empty( $first['icon_svg'] ) ) {
+				$main_icon = $first['icon_svg'];
+			} else {
+				$main_icon = ucb_get_svg( $first['type'] );
+			}
 		}
 		
 		echo '<div class="ucb-mobile-main-btn"><span>' . $main_icon . '</span></div>';
 
 		// 2. The sub-buttons (Will stack upwards)
 		echo '<div class="ucb-mobile-sub-buttons">';
-		for ( $i = 1; $i <= 5; $i++ ) {
-			$slot = isset( $options["mobile_slot_$i"] ) ? $options["mobile_slot_$i"] : array();
-			if ( empty( $slot['type'] ) ) {
-				continue;
-			}
-			$link = $this->get_link( $slot['type'], $slot['link'] );
+		foreach ( $buttons as $button ) {
+			$link = $this->get_link( $button['type'], $button['link'] );
 			
-			// Use icon URL if provided, otherwise SVG library
-			if ( ! empty( $slot['icon_url'] ) ) {
-				$icon = '<img src="' . esc_url( $slot['icon_url'] ) . '" alt="' . esc_attr( $slot['label'] ) . '" />';
+			// Icon priority: URL > Code > Library
+			if ( ! empty( $button['icon_url'] ) ) {
+				$icon = '<img src="' . esc_url( $button['icon_url'] ) . '" alt="' . esc_attr( $button['label'] ) . '" />';
+			} elseif ( ! empty( $button['icon_svg'] ) ) {
+				$icon = $button['icon_svg'];
 			} else {
-				$icon = ucb_get_svg( $slot['type'] );
+				$icon = ucb_get_svg( $button['type'] );
 			}
 			?>
-			<a href="<?php echo esc_url( $link ); ?>" class="ucb-mobile-sub-btn ucb-btn-<?php echo esc_attr( $slot['type'] ); ?>" target="_blank">
-				<span class="ucb-label"><?php echo esc_html( $slot['label'] ); ?></span>
+			<a href="<?php echo esc_url( $link ); ?>" class="ucb-mobile-sub-btn ucb-btn-<?php echo esc_attr( $button['type'] ); ?>" target="_blank">
+				<span class="ucb-label"><?php echo esc_html( $button['label'] ); ?></span>
 				<span class="ucb-icon"><?php echo $icon; ?></span>
 			</a>
 			<?php

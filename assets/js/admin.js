@@ -12,7 +12,7 @@ jQuery(document).ready(function($) {
     });
 
     // Sortable
-    $('#ucb-desktop-list').sortable({
+    $('#ucb-desktop-list, #ucb-mobile-list').sortable({
         handle: '.handle',
         placeholder: 'ucb-sortable-placeholder',
         update: function(event, ui) {
@@ -54,6 +54,40 @@ jQuery(document).ready(function($) {
         $('#ucb-desktop-list').append(template);
     });
 
+    // Add Mobile Item
+    $('#ucb-add-mobile-item').on('click', function() {
+        var index = $('#ucb-mobile-list li').length;
+        var template = `
+            <li class="ucb-list-item">
+                <span class="dashicons dashicons-move handle"></span>
+                <div class="ucb-item-fields">
+                    <div class="ucb-field-row">
+                        <select name="ucb_settings[mobile_buttons][${index}][type]">
+                            <option value="phone">Phone</option>
+                            <option value="zalo">Zalo</option>
+                            <option value="messenger">Messenger</option>
+                            <option value="whatsapp">WhatsApp</option>
+                            <option value="telegram">Telegram</option>
+                            <option value="mail">Email</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                        <input type="text" name="ucb_settings[mobile_buttons][${index}][label]" value="" placeholder="Label" />
+                        <input type="text" name="ucb_settings[mobile_buttons][${index}][link]" value="" placeholder="Link/ID" />
+                    </div>
+                    <div class="ucb-field-row ucb-upload-row">
+                        <input type="text" class="ucb-img-url" name="ucb_settings[mobile_buttons][${index}][icon_url]" value="" placeholder="Custom SVG URL" />
+                        <button type="button" class="button ucb-upload-btn">Upload SVG</button>
+                    </div>
+                    <div class="ucb-field-row ucb-svg-row">
+                        <textarea name="ucb_settings[mobile_buttons][${index}][icon_svg]" placeholder="Or Paste Custom SVG Code here"></textarea>
+                    </div>
+                </div>
+                <button type="button" class="ucb-remove-item button-link-delete">Remove</button>
+            </li>
+        `;
+        $('#ucb-mobile-list').append(template);
+    });
+
     // Remove Item
     $(document).on('click', '.ucb-remove-item', function() {
         $(this).closest('li').fadeOut(300, function() {
@@ -63,7 +97,7 @@ jQuery(document).ready(function($) {
     });
 
     function updateIndexes() {
-        $('#ucb-desktop-list li').each(function(index) {
+        $('#ucb-desktop-list li, #ucb-mobile-list li').each(function(index) {
             $(this).find('select, input, textarea').each(function() {
                 var name = $(this).attr('name');
                 if (name) {
