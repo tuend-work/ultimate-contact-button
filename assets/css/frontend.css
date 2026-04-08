@@ -29,10 +29,29 @@
 }
 
 @keyframes ucb-shake {
-    0%, 100% { transform: scale(1) rotate(0); }
-    10%, 20% { transform: scale(1.15) rotate(-6deg); }
-    30%, 50%, 70%, 90% { transform: scale(1.15) rotate(6deg); }
-    40%, 60%, 80% { transform: scale(1.15) rotate(-6deg); }
+
+    0%,
+    100% {
+        transform: scale(1) rotate(0);
+    }
+
+    10%,
+    20% {
+        transform: scale(1.15) rotate(-6deg);
+    }
+
+    30%,
+    50%,
+    70%,
+    90% {
+        transform: scale(1.15) rotate(6deg);
+    }
+
+    40%,
+    60%,
+    80% {
+        transform: scale(1.15) rotate(-6deg);
+    }
 }
 
 .ucb-main-trigger span {
@@ -134,6 +153,10 @@
 }
 
 /* Visibility based on Display Mode */
+.ucb-mode-always .ucb-main-trigger {
+    display: none;
+}
+
 .ucb-mode-always .ucb-label {
     max-width: 0;
     opacity: 0;
@@ -146,6 +169,7 @@
     max-width: 250px;
     opacity: 1;
     margin-right: 15px;
+    margin-left: 15px;
 }
 
 .ucb-mode-click .ucb-label {
@@ -179,7 +203,7 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
-    box-shadow: 0 -3px 15px rgba(0,0,0,0.12);
+    box-shadow: 0 -3px 15px rgba(0, 0, 0, 0.12);
     z-index: 999999;
     padding: 0 5px;
     border-radius: 15px 15px 0 0;
@@ -226,6 +250,7 @@
 }
 
 @media (max-width: 768px) {
+
     /* If Bottom Menu is enabled, elevate FAB slightly if needed */
     .ucb-main-container {
         /* Optional: move FAB higher so it doesn't overlap Bottom Menu */
