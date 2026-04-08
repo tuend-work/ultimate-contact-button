@@ -95,13 +95,13 @@ class UCB_Settings {
 		);
 
 		// Tab 2: Bottom Mobile Menu
-		add_settings_section( 'ucb_bottom_section', __( 'Bottom Mobile Menu Configuration', 'ultimate-contact-button' ), null, 'ultimate-contact-button' );
+		add_settings_section( 'ucb_bottom_section', __( 'Bottom Mobile Menu Configuration', 'ultimate-contact-button' ), null, 'ultimate-contact-button-bottom' );
 		
 		add_settings_field(
 			'bottom_menu_enabled',
 			__( 'Enable Bottom Menu', 'ultimate-contact-button' ),
 			array( $this, 'render_checkbox_field' ),
-			'ultimate-contact-button',
+			'ultimate-contact-button-bottom',
 			'ucb_bottom_section',
 			array( 'label_for' => 'bottom_menu_enabled' )
 		);
@@ -162,11 +162,9 @@ class UCB_Settings {
 					
 					<div class="ucb-tab-content" id="tab-bottom">
 						<?php 
-						// Render only the Bottom section fields here
-						echo '<div class="ucb-section-header">';
-						_e( 'Configure the menu bar that appears at the bottom of mobile screens.', 'ultimate-contact-button' );
-						echo '</div>';
+						do_settings_sections( 'ultimate-contact-button-bottom' );
 						?>
+						<hr/>
 						<h3><?php _e( 'Bottom Menu Items', 'ultimate-contact-button' ); ?></h3>
 						<?php $this->render_bottom_menu_manager(); ?>
 					</div>

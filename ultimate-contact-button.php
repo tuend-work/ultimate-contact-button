@@ -1,12 +1,12 @@
 <?php
 /**
  * Plugin Name: Ultimate Contact Button
- * Plugin URI:  #
+ * Plugin URI:  https://profiles.wordpress.org/nguyenductue/
  * Description: A professional contact button manager for Desktop and Mobile.
- * Version:     2.1.1
- * Author:      Tuend Work
- * Author URI:  #
- * License:     GPL-2.0+
+ * Version:     2.1.2
+ * Author:      Nguyễn Đức Tuệ
+ * Author URI:  https://profiles.wordpress.org/nguyenductue/
+ * License:     GPL-2.0+	
  * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain: ultimate-contact-button
  * Domain Path: /languages
@@ -27,7 +27,7 @@ final class Ultimate_Contact_Button {
 	 *
 	 * @var string
 	 */
-	const VERSION = '2.1.1';
+	const VERSION = '2.1.2';
 
 	/**
 	 * Instance of this class
