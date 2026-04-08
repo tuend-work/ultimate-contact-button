@@ -1,35 +1,35 @@
 jQuery(document).ready(function($) {
-    // Mobile FAB Toggle
-    $('.ucb-mobile-main-btn').on('click', function() {
-        $(this).closest('.ucb-mobile-container').toggleClass('active');
+    // 1. FAB Main Contact Button Toggle
+    $(document).on('click', '.ucb-main-trigger', function() {
+        var $container = $(this).closest('.ucb-main-container');
+        $container.toggleClass('active');
         
-        // Rotate icon if active
-        if ($(this).closest('.ucb-mobile-container').hasClass('active')) {
+        // Rotate trigger icon if active
+        if ($container.hasClass('active')) {
             $(this).find('span').css('transform', 'rotate(45deg)');
         } else {
             $(this).find('span').css('transform', 'rotate(0deg)');
         }
     });
 
-    // Close on click outside
+    // Close FAB if clicking outside
     $(document).on('click', function(e) {
-        if (!$(e.target).closest('.ucb-mobile-container').length) {
-            $('.ucb-mobile-container').removeClass('active');
-            $('.ucb-mobile-main-btn span').css('transform', 'rotate(0deg)');
+        if (!$(e.target).closest('.ucb-main-container').length) {
+            $('.ucb-main-container').removeClass('active');
+            $('.ucb-main-trigger span').css('transform', 'rotate(0deg)');
         }
     });
 
-    // Icon Rotation for Main Button (Desktop & Mobile)
-    function cycleIcons() {
-        $('.ucb-desktop-container, .ucb-mobile-container').each(function() {
+    // 2. Icon Rotation for Main Contact Button (FAB)
+    function cycleFabIcons() {
+        $('.ucb-main-container').each(function() {
             var $container = $(this);
-            var $mainBtn = $container.find('.ucb-mobile-main-btn, .ucb-desktop-main-btn');
-            var $mainIcon = $mainBtn.find('span');
-            var $subIcons = $container.find('.ucb-mobile-sub-btn .ucb-icon, .ucb-sub-btn .ucb-icon');
+            var $trigger = $container.find('.ucb-main-trigger');
+            var $mainIcon = $trigger.find('span');
+            var $subIcons = $container.find('.ucb-sub-btn .ucb-icon');
             
-            // Don't cycle if the menu is open (rotated)
+            // Logic: Don't cycle icon while menu is open
             if ($container.hasClass('active')) return;
-            
             if ($subIcons.length === 0) return;
             
             var currentIndex = $container.data('icon-index') !== undefined ? $container.data('icon-index') : -1;
@@ -37,8 +37,8 @@ jQuery(document).ready(function($) {
             
             var nextIconHtml = $subIcons.eq(nextIndex).html();
             
+            // Smooth transition
             $mainIcon.css('opacity', '0');
-            
             setTimeout(function() {
                 $mainIcon.html(nextIconHtml).css('opacity', '1');
             }, 500);
@@ -47,6 +47,6 @@ jQuery(document).ready(function($) {
         });
     }
 
-    // Start cycling every 2 seconds
-    setInterval(cycleIcons, 2000);
+    // Set rotation interval (2.5s for dynamic feel)
+    setInterval(cycleFabIcons, 2500);
 });

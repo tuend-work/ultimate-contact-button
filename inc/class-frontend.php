@@ -15,18 +15,24 @@ class UCB_Frontend {
 
 	public function render_elements() {
 		$options = get_option( 'ucb_settings' );
-
-		if ( ! empty( $options['desktop_enabled'] ) ) {
-			$this->render_desktop_button( $options );
+		if ( ! $options ) {
+			return;
 		}
 
-		if ( ! empty( $options['mobile_enabled'] ) ) {
-			$this->render_mobile_bar( $options );
+		// 1. Main Contact Button (FAB) - Desktop & Mobile
+		if ( ! empty( $options['main_enabled'] ) ) {
+			$this->render_main_button( $options );
+		}
+
+		// 2. Bottom Mobile Menu - Mobile Only
+		if ( ! empty( $options['bottom_menu_enabled'] ) ) {
+			$this->render_bottom_menu( $options );
 		}
 	}
 
-	private function render_desktop_button( $options ) {
-		$buttons = isset( $options['desktop_buttons'] ) ? $options['desktop_buttons'] : array();
+	private function render_main_button( $options ) {
+		// Migration fallback
+		$buttons = isset( $options['main_buttons'] ) ? $options['main_buttons'] : (isset($options['desktop_buttons']) ? $options['desktop_buttons'] : array());
 		if ( empty( $buttons ) ) {
 			return;
 		}
@@ -35,19 +41,20 @@ class UCB_Frontend {
 		$bottom = isset( $options['bottom_distance'] ) ? absint( $options['bottom_distance'] ) : 30;
 		$margin = isset( $options['side_distance'] ) ? absint( $options['side_distance'] ) : 30;
 
-		$display_mode = isset( $options['desktop_display_mode'] ) ? $options['desktop_display_mode'] : 'click';
-		$container_class = "ucb-desktop-container ucb-desktop-mode-{$display_mode}";
+		$display_mode = isset( $options['main_display_mode'] ) ? $options['main_display_mode'] : 'click';
+		// Using a generic class ucb-main-container so we can style it for both PC/Mobile
+		$container_class = "ucb-main-container ucb-mode-{$display_mode}";
 
 		$style = "bottom: {$bottom}px; {$side}: {$margin}px;";
 		$style .= ( 'left' === $side ) ? 'align-items: flex-start;' : 'align-items: flex-end;';
 
-		$first_icon = ! empty( $buttons[0]['icon_svg'] ) ? $buttons[0]['icon_svg'] : ucb_get_svg( $buttons[0]['type'] );
+		$first_icon = ! empty( $buttons[0]['icon_url'] ) ? '<img src="' . esc_url( $buttons[0]['icon_url'] ) . '" />' : (!empty($buttons[0]['icon_svg']) ? $buttons[0]['icon_svg'] : ucb_get_svg( $buttons[0]['type'] ));
 
 		echo '<div class="' . esc_attr( $container_class ) . '" style="' . esc_attr( $style ) . '">';
-		echo '<div class="ucb-desktop-main-btn"><span>' . $first_icon . '</span></div>';
+		echo '<div class="ucb-main-trigger"><span>' . $first_icon . '</span></div>';
 		
 		$sub_btn_style = ( 'left' === $side ) ? 'align-items: flex-start;' : 'align-items: flex-end;';
-		echo '<div class="ucb-desktop-sub-buttons" style="' . esc_attr( $sub_btn_style ) . '">';
+		echo '<div class="ucb-sub-buttons-list" style="' . esc_attr( $sub_btn_style ) . '">';
 		
 		foreach ( $buttons as $button ) {
 			$link = $this->get_link( $button['type'], $button['link'] );
@@ -67,7 +74,7 @@ class UCB_Frontend {
 			}
 			?>
 			<a href="<?php echo esc_url( $link ); ?>" class="<?php echo esc_attr( $btn_class ); ?>" target="_blank">
-				<span class="ucb-icon"><?php echo $icon; // Allow SVG content ?></span>
+				<span class="ucb-icon"><?php echo $icon; ?></span>
 				<span class="ucb-label"><?php echo esc_html( $button['label'] ); ?></span>
 			</a>
 			<?php
@@ -76,33 +83,18 @@ class UCB_Frontend {
 		echo '</div>'; // End container
 	}
 
-	private function render_mobile_bar( $options ) {
-		$container_class = "ucb-mobile-container ucb-mobile-mode-click active"; 
-		$buttons = isset( $options['mobile_buttons'] ) ? $options['mobile_buttons'] : array();
-
-		echo '<div class="' . esc_attr( $container_class ) . '">';
-		
-		// 1. The main trigger button (Will be at the bottom due to column-reverse)
-		$main_icon = '<span class="dashicons dashicons-phone"></span>';
-		if ( ! empty( $buttons ) ) {
-			$first = $buttons[0];
-			if ( ! empty( $first['icon_url'] ) ) {
-				$main_icon = '<img src="' . esc_url( $first['icon_url'] ) . '" />';
-			} elseif ( ! empty( $first['icon_svg'] ) ) {
-				$main_icon = $first['icon_svg'];
-			} else {
-				$main_icon = ucb_get_svg( $first['type'] );
-			}
+	private function render_bottom_menu( $options ) {
+		// Migration fallback
+		$buttons = isset( $options['bottom_menu_buttons'] ) ? $options['bottom_menu_buttons'] : (isset($options['mobile_buttons']) ? $options['mobile_buttons'] : array());
+		if ( empty( $buttons ) ) {
+			return;
 		}
-		
-		echo '<div class="ucb-mobile-main-btn"><span>' . $main_icon . '</span></div>';
 
-		// 2. The sub-buttons (Will stack upwards)
-		echo '<div class="ucb-mobile-sub-buttons">';
+		echo '<div class="ucb-bottom-menu-container">';
+		
 		foreach ( $buttons as $button ) {
 			$link = $this->get_link( $button['type'], $button['link'] );
 			
-			// Icon priority: URL > Code > Library
 			if ( ! empty( $button['icon_url'] ) ) {
 				$icon = '<img src="' . esc_url( $button['icon_url'] ) . '" alt="' . esc_attr( $button['label'] ) . '" />';
 			} elseif ( ! empty( $button['icon_svg'] ) ) {
@@ -111,13 +103,12 @@ class UCB_Frontend {
 				$icon = ucb_get_svg( $button['type'] );
 			}
 			?>
-			<a href="<?php echo esc_url( $link ); ?>" class="ucb-mobile-sub-btn ucb-btn-<?php echo esc_attr( $button['type'] ); ?>" target="_blank">
-				<span class="ucb-label"><?php echo esc_html( $button['label'] ); ?></span>
-				<span class="ucb-icon"><?php echo $icon; ?></span>
+			<a href="<?php echo esc_url( $link ); ?>" class="ucb-bottom-menu-item" target="_blank">
+				<span class="ucb-menu-icon"><?php echo $icon; ?></span>
+				<span class="ucb-menu-label"><?php echo esc_html( $button['label'] ); ?></span>
 			</a>
 			<?php
 		}
-		echo '</div>'; // End sub-buttons
 		
 		echo '</div>'; // End container
 	}

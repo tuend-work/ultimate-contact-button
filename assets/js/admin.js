@@ -28,7 +28,7 @@ jQuery(document).ready(function($) {
                 <span class="dashicons dashicons-move handle"></span>
                 <div class="ucb-item-fields">
                     <div class="ucb-field-row">
-                        <select name="ucb_settings[desktop_buttons][${index}][type]">
+                        <select name="ucb_settings[main_buttons][${index}][type]">
                             <option value="phone">Phone</option>
                             <option value="zalo">Zalo</option>
                             <option value="messenger">Messenger</option>
@@ -37,15 +37,15 @@ jQuery(document).ready(function($) {
                             <option value="mail">Email</option>
                             <option value="custom">Custom</option>
                         </select>
-                        <input type="text" name="ucb_settings[desktop_buttons][${index}][label]" value="" placeholder="Label" />
-                        <input type="text" name="ucb_settings[desktop_buttons][${index}][link]" value="" placeholder="Link/ID" />
+                        <input type="text" name="ucb_settings[main_buttons][${index}][label]" value="" placeholder="Label" />
+                        <input type="text" name="ucb_settings[main_buttons][${index}][link]" value="" placeholder="Link/ID" />
                     </div>
                     <div class="ucb-field-row ucb-upload-row">
-                        <input type="text" class="ucb-img-url" name="ucb_settings[desktop_buttons][${index}][icon_url]" value="" placeholder="Custom SVG URL" />
+                        <input type="text" class="ucb-img-url" name="ucb_settings[main_buttons][${index}][icon_url]" value="" placeholder="Custom SVG URL" />
                         <button type="button" class="button ucb-upload-btn">Upload SVG</button>
                     </div>
                     <div class="ucb-field-row ucb-svg-row">
-                        <textarea name="ucb_settings[desktop_buttons][${index}][icon_svg]" placeholder="Or Paste Custom SVG Code here"></textarea>
+                        <textarea name="ucb_settings[main_buttons][${index}][icon_svg]" placeholder="Or Paste Custom SVG Code here"></textarea>
                     </div>
                 </div>
                 <button type="button" class="ucb-remove-item button-link-delete">Remove</button>
@@ -62,7 +62,7 @@ jQuery(document).ready(function($) {
                 <span class="dashicons dashicons-move handle"></span>
                 <div class="ucb-item-fields">
                     <div class="ucb-field-row">
-                        <select name="ucb_settings[mobile_buttons][${index}][type]">
+                        <select name="ucb_settings[bottom_menu_buttons][${index}][type]">
                             <option value="phone">Phone</option>
                             <option value="zalo">Zalo</option>
                             <option value="messenger">Messenger</option>
@@ -71,15 +71,15 @@ jQuery(document).ready(function($) {
                             <option value="mail">Email</option>
                             <option value="custom">Custom</option>
                         </select>
-                        <input type="text" name="ucb_settings[mobile_buttons][${index}][label]" value="" placeholder="Label" />
-                        <input type="text" name="ucb_settings[mobile_buttons][${index}][link]" value="" placeholder="Link/ID" />
+                        <input type="text" name="ucb_settings[bottom_menu_buttons][${index}][label]" value="" placeholder="Label" />
+                        <input type="text" name="ucb_settings[bottom_menu_buttons][${index}][link]" value="" placeholder="Link/ID" />
                     </div>
                     <div class="ucb-field-row ucb-upload-row">
-                        <input type="text" class="ucb-img-url" name="ucb_settings[mobile_buttons][${index}][icon_url]" value="" placeholder="Custom SVG URL" />
+                        <input type="text" class="ucb-img-url" name="ucb_settings[bottom_menu_buttons][${index}][icon_url]" value="" placeholder="Custom SVG URL" />
                         <button type="button" class="button ucb-upload-btn">Upload SVG</button>
                     </div>
                     <div class="ucb-field-row ucb-svg-row">
-                        <textarea name="ucb_settings[mobile_buttons][${index}][icon_svg]" placeholder="Or Paste Custom SVG Code here"></textarea>
+                        <textarea name="ucb_settings[bottom_menu_buttons][${index}][icon_svg]" placeholder="Or Paste Custom SVG Code here"></textarea>
                     </div>
                 </div>
                 <button type="button" class="ucb-remove-item button-link-delete">Remove</button>

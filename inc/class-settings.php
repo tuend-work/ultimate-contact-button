@@ -34,36 +34,24 @@ class UCB_Settings {
 	public function register_settings() {
 		register_setting( self::OPTION_NAME, self::OPTION_NAME, array( 'sanitize_callback' => array( $this, 'sanitize' ) ) );
 
-		// General Section
-		add_settings_section( 'ucb_general_section', __( 'General Settings', 'ultimate-contact-button' ), null, 'ultimate-contact-button' );
+		// Tab 1: Main Contact Button (FAB)
+		add_settings_section( 'ucb_main_section', __( 'Main Contact Button Configuration', 'ultimate-contact-button' ), null, 'ultimate-contact-button' );
 
 		add_settings_field(
-			'desktop_enabled',
-			__( 'Enable Desktop Button', 'ultimate-contact-button' ),
+			'main_enabled',
+			__( 'Enable Main Button', 'ultimate-contact-button' ),
 			array( $this, 'render_checkbox_field' ),
 			'ultimate-contact-button',
-			'ucb_general_section',
-			array( 'label_for' => 'desktop_enabled' )
+			'ucb_main_section',
+			array( 'label_for' => 'main_enabled' )
 		);
-
-		add_settings_field(
-			'mobile_enabled',
-			__( 'Enable Mobile Bar', 'ultimate-contact-button' ),
-			array( $this, 'render_checkbox_field' ),
-			'ultimate-contact-button',
-			'ucb_general_section',
-			array( 'label_for' => 'mobile_enabled' )
-		);
-
-		// Position Section
-		add_settings_section( 'ucb_position_section', __( 'Position Settings (Desktop)', 'ultimate-contact-button' ), null, 'ultimate-contact-button' );
 
 		add_settings_field(
 			'position_side',
 			__( 'Button Side', 'ultimate-contact-button' ),
 			array( $this, 'render_select_field' ),
 			'ultimate-contact-button',
-			'ucb_position_section',
+			'ucb_main_section',
 			array( 
 				'label_for' => 'position_side',
 				'options' => array(
@@ -78,7 +66,7 @@ class UCB_Settings {
 			__( 'Bottom Distance (px)', 'ultimate-contact-button' ),
 			array( $this, 'render_number_field' ),
 			'ultimate-contact-button',
-			'ucb_position_section',
+			'ucb_main_section',
 			array( 'label_for' => 'bottom_distance', 'default' => 30 )
 		);
 
@@ -87,18 +75,18 @@ class UCB_Settings {
 			__( 'Side Distance (px)', 'ultimate-contact-button' ),
 			array( $this, 'render_number_field' ),
 			'ultimate-contact-button',
-			'ucb_position_section',
+			'ucb_main_section',
 			array( 'label_for' => 'side_distance', 'default' => 30 )
 		);
 
 		add_settings_field(
-			'desktop_display_mode',
+			'main_display_mode',
 			__( 'Display Mode', 'ultimate-contact-button' ),
 			array( $this, 'render_select_field' ),
 			'ultimate-contact-button',
-			'ucb_position_section',
+			'ucb_main_section',
 			array( 
-				'label_for' => 'desktop_display_mode',
+				'label_for' => 'main_display_mode',
 				'options' => array(
 					'always' => 'Always Show',
 					'click' => 'When Clicking/Hover'
@@ -106,8 +94,17 @@ class UCB_Settings {
 			)
 		);
 
-		// Mobile Section
-		add_settings_section( 'ucb_mobile_section', __( 'Mobile Settings', 'ultimate-contact-button' ), null, 'ultimate-contact-button' );
+		// Tab 2: Bottom Mobile Menu
+		add_settings_section( 'ucb_bottom_section', __( 'Bottom Mobile Menu Configuration', 'ultimate-contact-button' ), null, 'ultimate-contact-button' );
+		
+		add_settings_field(
+			'bottom_menu_enabled',
+			__( 'Enable Bottom Menu', 'ultimate-contact-button' ),
+			array( $this, 'render_checkbox_field' ),
+			'ultimate-contact-button',
+			'ucb_bottom_section',
+			array( 'label_for' => 'bottom_menu_enabled' )
+		);
 	}
 
 	public function render_select_field( $args ) {
@@ -148,28 +145,30 @@ class UCB_Settings {
 			<form method="post" action="options.php">
 				<?php
 				settings_fields( self::OPTION_NAME );
-				// do_settings_sections( 'ultimate-contact-button' );
 				?>
 				
 				<div class="ucb-tabs">
 					<nav class="ucb-tab-nav">
-						<a href="#tab-general" class="active"><?php _e( 'General', 'ultimate-contact-button' ); ?></a>
-						<a href="#tab-desktop"><?php _e( 'Desktop Button', 'ultimate-contact-button' ); ?></a>
-						<a href="#tab-mobile"><?php _e( 'Mobile Bar', 'ultimate-contact-button' ); ?></a>
+						<a href="#tab-main" class="active"><?php _e( 'Main Contact Button', 'ultimate-contact-button' ); ?></a>
+						<a href="#tab-bottom"><?php _e( 'Bottom Mobile Menu', 'ultimate-contact-button' ); ?></a>
 					</nav>
 					
-					<div class="ucb-tab-content active" id="tab-general">
+					<div class="ucb-tab-content active" id="tab-main">
 						<?php do_settings_sections( 'ultimate-contact-button' ); ?>
+						<hr/>
+						<h3><?php _e( 'Main Button Items (Always visible or FAB)', 'ultimate-contact-button' ); ?></h3>
+						<?php $this->render_main_manager(); ?>
 					</div>
 					
-					<div class="ucb-tab-content" id="tab-desktop">
-						<h3><?php _e( 'Desktop Contact Buttons', 'ultimate-contact-button' ); ?></h3>
-						<?php $this->render_desktop_manager(); ?>
-					</div>
-					
-					<div class="ucb-tab-content" id="tab-mobile">
-						<h3><?php _e( 'Mobile Contact Bar', 'ultimate-contact-button' ); ?></h3>
-						<?php $this->render_mobile_manager(); ?>
+					<div class="ucb-tab-content" id="tab-bottom">
+						<?php 
+						// Render only the Bottom section fields here
+						echo '<div class="ucb-section-header">';
+						_e( 'Configure the menu bar that appears at the bottom of mobile screens.', 'ultimate-contact-button' );
+						echo '</div>';
+						?>
+						<h3><?php _e( 'Bottom Menu Items', 'ultimate-contact-button' ); ?></h3>
+						<?php $this->render_bottom_menu_manager(); ?>
 					</div>
 				</div>
 
@@ -179,9 +178,10 @@ class UCB_Settings {
 		<?php
 	}
 
-	private function render_desktop_manager() {
+	private function render_main_manager() {
 		$options = get_option( self::OPTION_NAME );
-		$buttons = isset( $options['desktop_buttons'] ) ? $options['desktop_buttons'] : array();
+		// Fallback to desktop_buttons for migration
+		$buttons = isset( $options['main_buttons'] ) ? $options['main_buttons'] : (isset($options['desktop_buttons']) ? $options['desktop_buttons'] : array());
 		?>
 		<div id="ucb-desktop-repeater">
 			<ul class="ucb-sortable-list" id="ucb-desktop-list">
@@ -191,7 +191,7 @@ class UCB_Settings {
 							<span class="dashicons dashicons-move handle"></span>
 							<div class="ucb-item-fields">
 								<div class="ucb-field-row">
-									<select name="<?php echo esc_attr( self::OPTION_NAME . "[desktop_buttons][$index][type]" ); ?>">
+									<select name="<?php echo esc_attr( self::OPTION_NAME . "[main_buttons][$index][type]" ); ?>">
 										<option value="phone" <?php selected( $button['type'], 'phone' ); ?>>Phone</option>
 										<option value="zalo" <?php selected( $button['type'], 'zalo' ); ?>>Zalo</option>
 										<option value="messenger" <?php selected( $button['type'], 'messenger' ); ?>>Messenger</option>
@@ -200,15 +200,15 @@ class UCB_Settings {
 										<option value="mail" <?php selected( $button['type'], 'mail' ); ?>>Email</option>
 										<option value="custom" <?php selected( $button['type'], 'custom' ); ?>>Custom</option>
 									</select>
-									<input type="text" name="<?php echo esc_attr( self::OPTION_NAME . "[desktop_buttons][$index][label]" ); ?>" value="<?php echo esc_attr( $button['label'] ); ?>" placeholder="Label" />
-									<input type="text" name="<?php echo esc_attr( self::OPTION_NAME . "[desktop_buttons][$index][link]" ); ?>" value="<?php echo esc_attr( $button['link'] ); ?>" placeholder="Link/ID" />
+									<input type="text" name="<?php echo esc_attr( self::OPTION_NAME . "[main_buttons][$index][label]" ); ?>" value="<?php echo esc_attr( $button['label'] ); ?>" placeholder="Label" />
+									<input type="text" name="<?php echo esc_attr( self::OPTION_NAME . "[main_buttons][$index][link]" ); ?>" value="<?php echo esc_attr( $button['link'] ); ?>" placeholder="Link/ID" />
 								</div>
 								<div class="ucb-field-row ucb-upload-row">
-									<input type="text" class="ucb-img-url" name="<?php echo esc_attr( self::OPTION_NAME . "[desktop_buttons][$index][icon_url]" ); ?>" value="<?php echo isset( $button['icon_url'] ) ? esc_attr( $button['icon_url'] ) : ''; ?>" placeholder="Custom SVG URL" />
+									<input type="text" class="ucb-img-url" name="<?php echo esc_attr( self::OPTION_NAME . "[main_buttons][$index][icon_url]" ); ?>" value="<?php echo isset( $button['icon_url'] ) ? esc_attr( $button['icon_url'] ) : ''; ?>" placeholder="Custom SVG URL" />
 									<button type="button" class="button ucb-upload-btn"><?php _e( 'Upload SVG', 'ultimate-contact-button' ); ?></button>
 								</div>
 								<div class="ucb-field-row ucb-svg-row">
-									<textarea name="<?php echo esc_attr( self::OPTION_NAME . "[desktop_buttons][$index][icon_svg]" ); ?>" placeholder="Or Paste Custom SVG Code here"><?php echo isset( $button['icon_svg'] ) ? esc_textarea( $button['icon_svg'] ) : ''; ?></textarea>
+									<textarea name="<?php echo esc_attr( self::OPTION_NAME . "[main_buttons][$index][icon_svg]" ); ?>" placeholder="Or Paste Custom SVG Code here"><?php echo isset( $button['icon_svg'] ) ? esc_textarea( $button['icon_svg'] ) : ''; ?></textarea>
 								</div>
 							</div>
 							<button type="button" class="ucb-remove-item button-link-delete"><?php _e( 'Remove', 'ultimate-contact-button' ); ?></button>
@@ -221,9 +221,10 @@ class UCB_Settings {
 		<?php
 	}
 
-	private function render_mobile_manager() {
+	private function render_bottom_menu_manager() {
 		$options = get_option( self::OPTION_NAME );
-		$buttons = isset( $options['mobile_buttons'] ) ? $options['mobile_buttons'] : array();
+		// Fallback to mobile_buttons for migration
+		$buttons = isset( $options['bottom_menu_buttons'] ) ? $options['bottom_menu_buttons'] : (isset($options['mobile_buttons']) ? $options['mobile_buttons'] : array());
 		?>
 		<div id="ucb-mobile-repeater">
 			<ul class="ucb-sortable-list" id="ucb-mobile-list">
@@ -233,7 +234,7 @@ class UCB_Settings {
 							<span class="dashicons dashicons-move handle"></span>
 							<div class="ucb-item-fields">
 								<div class="ucb-field-row">
-									<select name="<?php echo esc_attr( self::OPTION_NAME . "[mobile_buttons][$index][type]" ); ?>">
+									<select name="<?php echo esc_attr( self::OPTION_NAME . "[bottom_menu_buttons][$index][type]" ); ?>">
 										<option value="phone" <?php selected( $button['type'], 'phone' ); ?>>Phone</option>
 										<option value="zalo" <?php selected( $button['type'], 'zalo' ); ?>>Zalo</option>
 										<option value="messenger" <?php selected( $button['type'], 'messenger' ); ?>>Messenger</option>
@@ -242,15 +243,15 @@ class UCB_Settings {
 										<option value="mail" <?php selected( $button['type'], 'mail' ); ?>>Email</option>
 										<option value="custom" <?php selected( $button['type'], 'custom' ); ?>>Custom</option>
 									</select>
-									<input type="text" name="<?php echo esc_attr( self::OPTION_NAME . "[mobile_buttons][$index][label]" ); ?>" value="<?php echo esc_attr( $button['label'] ); ?>" placeholder="Label" />
-									<input type="text" name="<?php echo esc_attr( self::OPTION_NAME . "[mobile_buttons][$index][link]" ); ?>" value="<?php echo esc_attr( $button['link'] ); ?>" placeholder="Link/ID" />
+									<input type="text" name="<?php echo esc_attr( self::OPTION_NAME . "[bottom_menu_buttons][$index][label]" ); ?>" value="<?php echo esc_attr( $button['label'] ); ?>" placeholder="Label" />
+									<input type="text" name="<?php echo esc_attr( self::OPTION_NAME . "[bottom_menu_buttons][$index][link]" ); ?>" value="<?php echo esc_attr( $button['link'] ); ?>" placeholder="Link/ID" />
 								</div>
 								<div class="ucb-field-row ucb-upload-row">
-									<input type="text" class="ucb-img-url" name="<?php echo esc_attr( self::OPTION_NAME . "[mobile_buttons][$index][icon_url]" ); ?>" value="<?php echo isset( $button['icon_url'] ) ? esc_attr( $button['icon_url'] ) : ''; ?>" placeholder="Custom SVG URL" />
+									<input type="text" class="ucb-img-url" name="<?php echo esc_attr( self::OPTION_NAME . "[bottom_menu_buttons][$index][icon_url]" ); ?>" value="<?php echo isset( $button['icon_url'] ) ? esc_attr( $button['icon_url'] ) : ''; ?>" placeholder="Custom SVG URL" />
 									<button type="button" class="button ucb-upload-btn"><?php _e( 'Upload SVG', 'ultimate-contact-button' ); ?></button>
 								</div>
 								<div class="ucb-field-row ucb-svg-row">
-									<textarea name="<?php echo esc_attr( self::OPTION_NAME . "[mobile_buttons][$index][icon_svg]" ); ?>" placeholder="Or Paste Custom SVG Code here"><?php echo isset( $button['icon_svg'] ) ? esc_textarea( $button['icon_svg'] ) : ''; ?></textarea>
+									<textarea name="<?php echo esc_attr( self::OPTION_NAME . "[bottom_menu_buttons][$index][icon_svg]" ); ?>" placeholder="Or Paste Custom SVG Code here"><?php echo isset( $button['icon_svg'] ) ? esc_textarea( $button['icon_svg'] ) : ''; ?></textarea>
 								</div>
 							</div>
 							<button type="button" class="ucb-remove-item button-link-delete"><?php _e( 'Remove', 'ultimate-contact-button' ); ?></button>
@@ -266,36 +267,33 @@ class UCB_Settings {
 	public function sanitize( $input ) {
 		$output = array();
 		
-		if ( isset( $input['desktop_enabled'] ) ) {
-			$output['desktop_enabled'] = 1;
-		}
-		
-		if ( isset( $input['mobile_enabled'] ) ) {
-			$output['mobile_enabled'] = 1;
-		}
-
-		if ( isset( $input['desktop_display_mode'] ) ) {
-			$output['desktop_display_mode'] = sanitize_text_field( $input['desktop_display_mode'] );
+		$flags = array( 'main_enabled', 'bottom_menu_enabled' );
+		foreach ( $flags as $flag ) {
+			if ( isset( $input[ $flag ] ) ) {
+				$output[ $flag ] = 1;
+			}
 		}
 
-		if ( isset( $input['position_side'] ) ) {
-			$output['position_side'] = sanitize_text_field( $input['position_side'] );
+		$texts = array( 'main_display_mode', 'position_side' );
+		foreach ( $texts as $text ) {
+			if ( isset( $input[ $text ] ) ) {
+				$output[ $text ] = sanitize_text_field( $input[ $text ] );
+			}
 		}
 
-		if ( isset( $input['bottom_distance'] ) ) {
-			$output['bottom_distance'] = absint( $input['bottom_distance'] );
+		$ints = array( 'bottom_distance', 'side_distance' );
+		foreach ( $ints as $int ) {
+			if ( isset( $input[ $int ] ) ) {
+				$output[ $int ] = absint( $input[ $int ] );
+			}
 		}
 
-		if ( isset( $input['side_distance'] ) ) {
-			$output['side_distance'] = absint( $input['side_distance'] );
+		if ( isset( $input['main_buttons'] ) ) {
+			$output['main_buttons'] = ucb_sanitize_array( $input['main_buttons'] );
 		}
 
-		if ( isset( $input['desktop_buttons'] ) ) {
-			$output['desktop_buttons'] = ucb_sanitize_array( $input['desktop_buttons'] );
-		}
-
-		if ( isset( $input['mobile_buttons'] ) ) {
-			$output['mobile_buttons'] = ucb_sanitize_array( $input['mobile_buttons'] );
+		if ( isset( $input['bottom_menu_buttons'] ) ) {
+			$output['bottom_menu_buttons'] = ucb_sanitize_array( $input['bottom_menu_buttons'] );
 		}
 
 		return $output;
