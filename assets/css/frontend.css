@@ -10,6 +10,7 @@
     display: flex;
     flex-direction: column-reverse;
     gap: 12px;
+    pointer-events: none; /* Allow clicks to pass through to elements below */
 }
 
 /* Main Trigger (Shake & Dynamic) */
@@ -26,6 +27,7 @@
     z-index: 10;
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     animation: ucb-shake 2.5s infinite;
+    pointer-events: auto; /* Re-enable clicks for the trigger itself */
 }
 
 @keyframes ucb-shake {
@@ -78,6 +80,7 @@
     gap: 10px;
     transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
     z-index: 5;
+    pointer-events: none; /* Default to click-through */
 }
 
 /* Toggle Logic for CLICKING / HOVER Mode */
@@ -85,7 +88,6 @@
     opacity: 0;
     visibility: hidden;
     transform: translateY(20px) scale(0.9);
-    pointer-events: none;
 }
 
 .ucb-mode-click.active .ucb-sub-buttons-list,
@@ -93,7 +95,7 @@
     opacity: 1;
     visibility: visible;
     transform: translateY(0) scale(1);
-    pointer-events: auto;
+    pointer-events: auto; /* Enable clicks when visible */
 }
 
 /* ALWAYS MODE LOGIC */
@@ -101,7 +103,7 @@
     opacity: 1;
     visibility: visible;
     transform: none;
-    pointer-events: auto;
+    pointer-events: auto; /* Enable clicks in always show mode */
 }
 
 /* Sub Button Pill Style */
