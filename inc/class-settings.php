@@ -89,6 +89,15 @@ class UCB_Settings {
 		);
 
 		add_settings_field(
+			'main_button_color',
+			__( 'Main Button Color', 'ultimate-contact-button' ),
+			array( $this, 'render_color_field' ),
+			'ultimate-contact-button',
+			'ucb_main_section',
+			array( 'label_for' => 'main_button_color', 'default' => '#1e73be' )
+		);
+
+		add_settings_field(
 			'main_display_mode',
 			__( 'Display Mode', 'ultimate-contact-button' ),
 			array( $this, 'render_select_field' ),
@@ -135,6 +144,15 @@ class UCB_Settings {
 		$value   = isset( $options[ $id ] ) ? $options[ $id ] : $args['default'];
 		?>
 		<input type="number" id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( self::OPTION_NAME . '[' . $id . ']' ); ?>" value="<?php echo esc_attr( $value ); ?>" class="small-text" />
+		<?php
+	}
+
+	public function render_color_field( $args ) {
+		$options = get_option( self::OPTION_NAME );
+		$id      = $args['label_for'];
+		$value   = isset( $options[ $id ] ) ? $options[ $id ] : $args['default'];
+		?>
+		<input type="text" id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( self::OPTION_NAME . '[' . $id . ']' ); ?>" value="<?php echo esc_attr( $value ); ?>" class="ucb-color-picker" />
 		<?php
 	}
 
@@ -281,7 +299,7 @@ class UCB_Settings {
 			}
 		}
 
-		$texts = array( 'main_display_mode', 'position_side' );
+		$texts = array( 'main_display_mode', 'position_side', 'main_button_color' );
 		foreach ( $texts as $text ) {
 			if ( isset( $input[ $text ] ) ) {
 				$output[ $text ] = sanitize_text_field( $input[ $text ] );

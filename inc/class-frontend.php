@@ -40,6 +40,7 @@ class UCB_Frontend {
 		$side   = isset( $options['position_side'] ) ? $options['position_side'] : 'right';
 		$bottom = isset( $options['bottom_distance'] ) ? absint( $options['bottom_distance'] ) : 30;
 		$margin = isset( $options['side_distance'] ) ? absint( $options['side_distance'] ) : 30;
+		$main_color = isset( $options['main_button_color'] ) ? $options['main_button_color'] : '#1e73be';
 
 		$display_mode = isset( $options['main_display_mode'] ) ? $options['main_display_mode'] : 'click';
 		// Using a generic class ucb-main-container so we can style it for both PC/Mobile
@@ -54,7 +55,7 @@ class UCB_Frontend {
 		$first_icon = ! empty( $buttons[0]['icon_url'] ) ? '<img src="' . esc_url( $buttons[0]['icon_url'] ) . '" />' : (!empty($buttons[0]['icon_svg']) ? $buttons[0]['icon_svg'] : ucb_get_svg( $buttons[0]['type'] ));
 
 		echo '<div class="' . esc_attr( $container_class ) . '" style="' . esc_attr( $style ) . '">';
-		echo '<div class="ucb-main-trigger"><span>' . $first_icon . '</span></div>';
+		echo '<div class="ucb-main-trigger" style="background-color: ' . esc_attr( $main_color ) . ';"><span>' . $first_icon . '</span></div>';
 		
 		$sub_btn_style = ( 'left' === $side ) ? 'align-items: flex-start;' : 'align-items: flex-end;';
 		echo '<div class="ucb-sub-buttons-list" style="' . esc_attr( $sub_btn_style ) . '">';

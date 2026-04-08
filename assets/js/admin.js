@@ -1,4 +1,7 @@
 jQuery(document).ready(function($) {
+    // Color Picker
+    $('.ucb-color-picker').wpColorPicker();
+
     // Tabs
     $('.ucb-tab-nav a').on('click', function(e) {
         e.preventDefault();
