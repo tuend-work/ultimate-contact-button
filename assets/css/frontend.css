@@ -60,9 +60,9 @@
     color: #333;
     font-size: 14px;
     font-weight: 500;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
-    border: 1px solid rgba(0,0,0,0.05);
+    border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .ucb-sub-btn .ucb-icon {
@@ -96,21 +96,15 @@
     margin-left: 10px;
 }
 
-.ucb-sub-btn:hover .ucb-icon {
-    background: rgba(255,255,255,0.2);
-}
 
 /* --- PILL STYLE REDESIGN (Inspired by new reference) --- */
 
 .ucb-mobile-container,
 .ucb-desktop-container {
     position: fixed;
-    bottom: 30px;
-    right: 20px;
     z-index: 999998;
     display: flex;
     flex-direction: column-reverse;
-    align-items: flex-end;
     gap: 12px;
 }
 
@@ -205,13 +199,15 @@
     flex-direction: row-reverse;
     align-items: center;
     background: #ffffff;
-    padding: 6px; /* Default circular padding */
+    padding: 6px;
+    /* Default circular padding */
     border-radius: 50px;
     text-decoration: none;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.12);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid rgba(0,0,0,0.05);
-    min-width: 52px; /* Ensure circular base */
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    min-width: 52px;
+    /* Ensure circular base */
     height: 52px;
     justify-content: center;
 }
@@ -233,7 +229,7 @@
 .ucb-mobile-sub-btn:hover,
 .ucb-sub-btn:hover {
     transform: translateX(-5px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
     background: #fdfdfd;
 }
 
@@ -243,7 +239,8 @@
     color: #333;
     font-size: 15px;
     font-weight: 600;
-    margin-right: 0; /* Default hidden margin */
+    margin-right: 0;
+    /* Default hidden margin */
     white-space: nowrap;
 }
 
@@ -281,7 +278,7 @@
     line-height: 1;
 }
 
-.ucb-icon svg, 
+.ucb-icon svg,
 .ucb-icon img {
     width: 24px;
     height: 24px;
@@ -308,9 +305,13 @@
 
 /* Responsive */
 @media (min-width: 769px) {
-    .ucb-mobile-container { display: none; }
+    .ucb-mobile-container {
+        display: none;
+    }
 }
 
 @media (max-width: 768px) {
-    .ucb-desktop-container { display: none; }
+    .ucb-desktop-container {
+        display: none;
+    }
 }

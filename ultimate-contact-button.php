@@ -3,7 +3,7 @@
  * Plugin Name: Ultimate Contact Button
  * Plugin URI:  #
  * Description: A professional contact button manager for Desktop and Mobile.
- * Version:     1.4.1
+ * Version:     1.5.0
  * Author:      Tuend Work
  * Author URI:  #
  * License:     GPL-2.0+
@@ -27,7 +27,7 @@ final class Ultimate_Contact_Button {
 	 *
 	 * @var string
 	 */
-	const VERSION = '1.4.0';
+	const VERSION = '1.5.0';
 
 	/**
 	 * Instance of this class
@@ -77,6 +77,7 @@ final class Ultimate_Contact_Button {
 		require_once UCB_PATH . 'inc/class-assets.php';
 		require_once UCB_PATH . 'inc/class-settings.php';
 		require_once UCB_PATH . 'inc/class-frontend.php';
+		require_once UCB_PATH . 'inc/updater.php';
 	}
 
 	/**
@@ -88,6 +89,9 @@ final class Ultimate_Contact_Button {
 		// Activation & Deactivation hooks
 		register_activation_hook( UCB_FILE, array( $this, 'activate' ) );
 		register_deactivation_hook( UCB_FILE, array( $this, 'deactivate' ) );
+
+		add_action( 'admin_init', array( $this, 'redirect_on_activation' ) );
+		add_filter( 'plugin_action_links_' . UCB_BASENAME, array( $this, 'add_action_links' ) );
 	}
 
 	/**
@@ -101,7 +105,29 @@ final class Ultimate_Contact_Button {
 	 * Plugin activation logic
 	 */
 	public function activate() {
-		// Initialize default settings if needed
+		add_option( 'ucb_do_activation_redirect', true );
+	}
+
+	/**
+	 * Redirect to settings page on activation
+	 */
+	public function redirect_on_activation() {
+		if ( get_option( 'ucb_do_activation_redirect', false ) ) {
+			delete_option( 'ucb_do_activation_redirect' );
+			if ( ! isset( $_GET['activate-multi'] ) ) {
+				wp_safe_redirect( admin_url( 'admin.php?page=ultimate-contact-button' ) );
+				exit;
+			}
+		}
+	}
+
+	/**
+	 * Add action links to plugin list
+	 */
+	public function add_action_links( $links ) {
+		$settings_link = '<a href="' . admin_url( 'admin.php?page=ultimate-contact-button' ) . '">' . __( 'Settings', 'ultimate-contact-button' ) . '</a>';
+		array_unshift( $links, $settings_link );
+		return $links;
 	}
 
 	/**

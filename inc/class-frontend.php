@@ -38,6 +38,9 @@ class UCB_Frontend {
 		$display_mode = isset( $options['desktop_display_mode'] ) ? $options['desktop_display_mode'] : 'click';
 		$container_class = "ucb-desktop-container ucb-desktop-mode-{$display_mode}";
 
+		$style = "bottom: {$bottom}px; {$side}: {$margin}px;";
+		$style .= ( 'left' === $side ) ? 'align-items: flex-start;' : 'align-items: flex-end;';
+
 		echo '<div class="' . esc_attr( $container_class ) . '" style="' . esc_attr( $style ) . '">';
 		echo '<div class="ucb-desktop-main-btn"><span class="dashicons dashicons-phone"></span></div>';
 		
