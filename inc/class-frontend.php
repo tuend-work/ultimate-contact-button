@@ -52,9 +52,11 @@ class UCB_Frontend {
 		foreach ( $buttons as $button ) {
 			$link = $this->get_link( $button['type'], $button['link'] );
 			
-			// Use custom SVG if provided, otherwise get from library
-			if ( ! empty( $button['icon_svg'] ) ) {
-				$icon = $button['icon_svg']; // Already sanitized in Settings class or we should be careful here
+			// Icon priority: URL > Code > Library
+			if ( ! empty( $button['icon_url'] ) ) {
+				$icon = '<img src="' . esc_url( $button['icon_url'] ) . '" alt="' . esc_attr( $button['label'] ) . '" />';
+			} elseif ( ! empty( $button['icon_svg'] ) ) {
+				$icon = $button['icon_svg'];
 			} else {
 				$icon = ucb_get_svg( $button['type'] );
 			}

@@ -203,8 +203,12 @@ class UCB_Settings {
 									<input type="text" name="<?php echo esc_attr( self::OPTION_NAME . "[desktop_buttons][$index][label]" ); ?>" value="<?php echo esc_attr( $button['label'] ); ?>" placeholder="Label" />
 									<input type="text" name="<?php echo esc_attr( self::OPTION_NAME . "[desktop_buttons][$index][link]" ); ?>" value="<?php echo esc_attr( $button['link'] ); ?>" placeholder="Link/ID" />
 								</div>
+								<div class="ucb-field-row ucb-upload-row">
+									<input type="text" class="ucb-img-url" name="<?php echo esc_attr( self::OPTION_NAME . "[desktop_buttons][$index][icon_url]" ); ?>" value="<?php echo isset( $button['icon_url'] ) ? esc_attr( $button['icon_url'] ) : ''; ?>" placeholder="Custom SVG URL" />
+									<button type="button" class="button ucb-upload-btn"><?php _e( 'Upload SVG', 'ultimate-contact-button' ); ?></button>
+								</div>
 								<div class="ucb-field-row ucb-svg-row">
-									<textarea name="<?php echo esc_attr( self::OPTION_NAME . "[desktop_buttons][$index][icon_svg]" ); ?>" placeholder="Custom SVG Code (optional)"><?php echo isset( $button['icon_svg'] ) ? esc_textarea( $button['icon_svg'] ) : ''; ?></textarea>
+									<textarea name="<?php echo esc_attr( self::OPTION_NAME . "[desktop_buttons][$index][icon_svg]" ); ?>" placeholder="Or Paste Custom SVG Code here"><?php echo isset( $button['icon_svg'] ) ? esc_textarea( $button['icon_svg'] ) : ''; ?></textarea>
 								</div>
 							</div>
 							<button type="button" class="ucb-remove-item button-link-delete"><?php _e( 'Remove', 'ultimate-contact-button' ); ?></button>

@@ -40,8 +40,12 @@ jQuery(document).ready(function($) {
                         <input type="text" name="ucb_settings[desktop_buttons][${index}][label]" value="" placeholder="Label" />
                         <input type="text" name="ucb_settings[desktop_buttons][${index}][link]" value="" placeholder="Link/ID" />
                     </div>
+                    <div class="ucb-field-row ucb-upload-row">
+                        <input type="text" class="ucb-img-url" name="ucb_settings[desktop_buttons][${index}][icon_url]" value="" placeholder="Custom SVG URL" />
+                        <button type="button" class="button ucb-upload-btn">Upload SVG</button>
+                    </div>
                     <div class="ucb-field-row ucb-svg-row">
-                        <textarea name="ucb_settings[desktop_buttons][${index}][icon_svg]" placeholder="Custom SVG Code (optional)"></textarea>
+                        <textarea name="ucb_settings[desktop_buttons][${index}][icon_svg]" placeholder="Or Paste Custom SVG Code here"></textarea>
                     </div>
                 </div>
                 <button type="button" class="ucb-remove-item button-link-delete">Remove</button>
@@ -77,11 +81,7 @@ jQuery(document).ready(function($) {
         var $btn = $(this);
         var $input = $btn.prev('.ucb-img-url');
 
-        if (file_frame) {
-            file_frame.open();
-            return;
-        }
-
+        // Create the media frame.
         file_frame = wp.media.frames.file_frame = wp.media({
             title: 'Select SVG Icon',
             button: {
@@ -90,11 +90,13 @@ jQuery(document).ready(function($) {
             multiple: false
         });
 
+        // When an image is selected, run a callback.
         file_frame.on('select', function() {
             var attachment = file_frame.state().get('selection').first().toJSON();
-            $input.val(attachment.url);
+            $input.val(attachment.url).trigger('change');
         });
 
+        // Finally, open the modal
         file_frame.open();
     });
 });
