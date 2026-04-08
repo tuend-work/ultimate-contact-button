@@ -3,7 +3,7 @@
  * Plugin Name: Ultimate Contact Button
  * Plugin URI:  #
  * Description: A professional contact button manager for Desktop and Mobile.
- * Version:     1.6.3
+ * Version:     1.6.4
  * Author:      Tuend Work
  * Author URI:  #
  * License:     GPL-2.0+
@@ -27,7 +27,7 @@ final class Ultimate_Contact_Button {
 	 *
 	 * @var string
 	 */
-	const VERSION = '1.6.3';
+	const VERSION = '1.6.4';
 
 	/**
 	 * Instance of this class
