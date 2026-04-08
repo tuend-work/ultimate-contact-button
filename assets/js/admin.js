@@ -97,7 +97,19 @@ jQuery(document).ready(function($) {
     });
 
     function updateIndexes() {
-        $('#ucb-desktop-list li, #ucb-mobile-list li').each(function(index) {
+        // Update Main Buttons
+        $('#ucb-desktop-list li').each(function(index) {
+            $(this).find('select, input, textarea').each(function() {
+                var name = $(this).attr('name');
+                if (name) {
+                    var newName = name.replace(/\[\d+\]/, '[' + index + ']');
+                    $(this).attr('name', newName);
+                }
+            });
+        });
+
+        // Update Bottom Menu Buttons
+        $('#ucb-mobile-list li').each(function(index) {
             $(this).find('select, input, textarea').each(function() {
                 var name = $(this).attr('name');
                 if (name) {
