@@ -80,7 +80,6 @@
 .ucb-sub-btn:hover {
     transform: translateX(-5px);
     background: #2271b1;
-    color: #fff;
 }
 
 .ucb-sub-btn.ucb-btn-left {
