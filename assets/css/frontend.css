@@ -250,6 +250,9 @@
 }
 
 @media (max-width: 768px) {
+    .ucb-hide-mobile {
+        display: none !important;
+    }
 
     /* If Bottom Menu is enabled, elevate FAB slightly if needed */
     .ucb-main-container {

@@ -47,6 +47,15 @@ class UCB_Settings {
 		);
 
 		add_settings_field(
+			'main_mobile_enabled',
+			__( 'Enable on Mobile', 'ultimate-contact-button' ),
+			array( $this, 'render_checkbox_field' ),
+			'ultimate-contact-button',
+			'ucb_main_section',
+			array( 'label_for' => 'main_mobile_enabled' )
+		);
+
+		add_settings_field(
 			'position_side',
 			__( 'Button Side', 'ultimate-contact-button' ),
 			array( $this, 'render_select_field' ),
@@ -265,7 +274,7 @@ class UCB_Settings {
 	public function sanitize( $input ) {
 		$output = array();
 		
-		$flags = array( 'main_enabled', 'bottom_menu_enabled' );
+		$flags = array( 'main_enabled', 'main_mobile_enabled', 'bottom_menu_enabled' );
 		foreach ( $flags as $flag ) {
 			if ( isset( $input[ $flag ] ) ) {
 				$output[ $flag ] = 1;

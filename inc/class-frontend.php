@@ -44,6 +44,9 @@ class UCB_Frontend {
 		$display_mode = isset( $options['main_display_mode'] ) ? $options['main_display_mode'] : 'click';
 		// Using a generic class ucb-main-container so we can style it for both PC/Mobile
 		$container_class = "ucb-main-container ucb-mode-{$display_mode}";
+		if ( empty( $options['main_mobile_enabled'] ) ) {
+			$container_class .= " ucb-hide-mobile";
+		}
 
 		$style = "bottom: {$bottom}px; {$side}: {$margin}px;";
 		$style .= ( 'left' === $side ) ? 'align-items: flex-start;' : 'align-items: flex-end;';
