@@ -33,13 +33,18 @@ function ucb_get_svg( $icon_name ) {
  * @return array Sanitized array.
  */
 function ucb_sanitize_array( $array ) {
-	foreach ( $array as $key => &$value ) {
+	if ( ! is_array( $array ) ) {
+		return array();
+	}
+
+	$sanitized = array();
+	foreach ( $array as $key => $value ) {
 		if ( is_array( $value ) ) {
-			$value = ucb_sanitize_array( $value );
+			$sanitized[ $key ] = ucb_sanitize_array( $value );
 		} else {
 			if ( 'icon_svg' === $key ) {
 				// Allow SVG tags for the icon field
-				$value = wp_kses( $value, array(
+				$sanitized[ $key ] = wp_kses( $value, array(
 					'svg'      => array(
 						'class'           => true,
 						'aria-hidden'     => true,
@@ -54,17 +59,22 @@ function ucb_sanitize_array( $array ) {
 						'stroke-width'    => true,
 						'stroke-linecap'  => true,
 						'stroke-linejoin' => true,
+						'style'           => true,
 					),
 					'path'     => array(
 						'd'    => true,
 						'fill' => true,
 						'stroke' => true,
+						'stroke-width' => true,
+						'transform' => true,
 					),
 					'circle'   => array(
 						'cx' => true,
 						'cy' => true,
 						'r'  => true,
 						'fill' => true,
+						'stroke' => true,
+						'stroke-width' => true,
 					),
 					'line'     => array(
 						'x1' => true,
@@ -72,14 +82,19 @@ function ucb_sanitize_array( $array ) {
 						'x2' => true,
 						'y2' => true,
 						'stroke' => true,
+						'stroke-width' => true,
 					),
 					'polyline' => array(
 						'points' => true,
 						'fill' => true,
+						'stroke' => true,
+						'stroke-width' => true,
 					),
 					'polygon'  => array(
 						'points' => true,
 						'fill' => true,
+						'stroke' => true,
+						'stroke-width' => true,
 					),
 					'rect'     => array(
 						'x'      => true,
@@ -89,12 +104,23 @@ function ucb_sanitize_array( $array ) {
 						'rx'     => true,
 						'ry'     => true,
 						'fill'   => true,
+						'stroke' => true,
+						'stroke-width' => true,
+						'transform' => true,
 					),
+					'g'        => array(
+						'fill' => true,
+						'stroke' => true,
+						'transform' => true,
+						'id' => true,
+					),
+					'defs'     => array(),
+					'style'    => array(),
 				) );
 			} else {
-				$value = sanitize_text_field( $value );
+				$sanitized[ $key ] = sanitize_text_field( $value );
 			}
 		}
 	}
-	return $array;
+	return $sanitized;
 }
