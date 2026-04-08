@@ -15,14 +15,38 @@ jQuery(document).ready(function($) {
     $(document).on('click', function(e) {
         if (!$(e.target).closest('.ucb-mobile-container').length) {
             $('.ucb-mobile-container').removeClass('active');
-            $('.ucb_mobile_main_btn span').css('transform', 'rotate(0deg)');
+            $('.ucb-mobile-main-btn span').css('transform', 'rotate(0deg)');
         }
     });
 
-    // Desktop main button click toggle for mobile touch devices
-    $('.ucb-desktop-main-btn').on('click', function(e) {
-        if ($(window).width() > 768) {
-            // On desktop, hover is usually enough
-        }
-    });
+    // Icon Rotation for Main Button (Desktop & Mobile)
+    function cycleIcons() {
+        $('.ucb-desktop-container, .ucb-mobile-container').each(function() {
+            var $container = $(this);
+            var $mainBtn = $container.find('.ucb-mobile-main-btn, .ucb-desktop-main-btn');
+            var $mainIcon = $mainBtn.find('span');
+            var $subIcons = $container.find('.ucb-mobile-sub-btn .ucb-icon, .ucb-sub-btn .ucb-icon');
+            
+            // Don't cycle if the menu is open (rotated)
+            if ($container.hasClass('active')) return;
+            
+            if ($subIcons.length === 0) return;
+            
+            var currentIndex = $container.data('icon-index') !== undefined ? $container.data('icon-index') : -1;
+            var nextIndex = (currentIndex + 1) % $subIcons.length;
+            
+            var nextIconHtml = $subIcons.eq(nextIndex).html();
+            
+            $mainIcon.css('opacity', '0');
+            
+            setTimeout(function() {
+                $mainIcon.html(nextIconHtml).css('opacity', '1');
+            }, 500);
+            
+            $container.data('icon-index', nextIndex);
+        });
+    }
+
+    // Start cycling every 3 seconds
+    setInterval(cycleIcons, 3500);
 });
