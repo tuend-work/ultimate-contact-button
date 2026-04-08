@@ -47,6 +47,6 @@ jQuery(document).ready(function($) {
         });
     }
 
-    // Start cycling every 3 seconds
-    setInterval(cycleIcons, 3500);
+    // Start cycling every 2 seconds
+    setInterval(cycleIcons, 2000);
 });

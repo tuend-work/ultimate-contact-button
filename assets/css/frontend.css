@@ -11,8 +11,8 @@
 }
 
 .ucb-desktop-main-btn {
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     background: linear-gradient(135deg, #2271b1 0%, #135e96 100%);
     border-radius: 50%;
     display: flex;
@@ -121,14 +121,33 @@
     cursor: pointer;
     z-index: 10;
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    animation: ucb-shake 4s infinite;
+    animation: ucb-shake 2.5s infinite;
 }
 
 @keyframes ucb-shake {
-    0%, 100% { transform: scale(1); }
-    10%, 20% { transform: scale(1.1) rotate(-3deg); }
-    30%, 50%, 70%, 90% { transform: scale(1.1) rotate(3deg); }
-    40%, 60%, 80% { transform: scale(1.1) rotate(-3deg); }
+
+    0%,
+    100% {
+        transform: scale(1) rotate(0);
+    }
+
+    10%,
+    20% {
+        transform: scale(1.15) rotate(-6deg);
+    }
+
+    30%,
+    50%,
+    70%,
+    90% {
+        transform: scale(1.15) rotate(6deg);
+    }
+
+    40%,
+    60%,
+    80% {
+        transform: scale(1.15) rotate(-6deg);
+    }
 }
 
 .ucb-mobile-main-btn span,
