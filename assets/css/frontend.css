@@ -1,0 +1,316 @@
+/* Desktop Container */
+.ucb-desktop-container {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 999999;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 15px;
+}
+
+.ucb-desktop-main-btn {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #2271b1 0%, #135e96 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(34, 113, 177, 0.4);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.ucb-desktop-main-btn span {
+    font-size: 28px;
+}
+
+.ucb-desktop-container:hover .ucb-desktop-main-btn {
+    transform: rotate(15deg) scale(1.1);
+}
+
+/* Sub Buttons */
+.ucb-desktop-sub-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+}
+
+.ucb-desktop-container:hover .ucb-desktop-sub-buttons {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.ucb-sub-btn {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    padding: 8px 15px;
+    border-radius: 30px;
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.ucb-sub-btn .ucb-icon {
+    width: 32px;
+    height: 32px;
+    background: #f0f0f0;
+    padding: 6px;
+    border-radius: 50%;
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ucb-sub-btn:hover {
+    transform: translateX(-5px);
+    background: #2271b1;
+    color: #fff;
+}
+
+.ucb-sub-btn.ucb-btn-left {
+    flex-direction: row-reverse;
+}
+
+.ucb-sub-btn.ucb-btn-left:hover {
+    transform: translateX(5px);
+}
+
+.ucb-sub-btn.ucb-btn-left .ucb-icon {
+    margin-right: 0;
+    margin-left: 10px;
+}
+
+.ucb-sub-btn:hover .ucb-icon {
+    background: rgba(255,255,255,0.2);
+}
+
+/* --- PILL STYLE REDESIGN (Inspired by new reference) --- */
+
+.ucb-mobile-container,
+.ucb-desktop-container {
+    position: fixed;
+    bottom: 30px;
+    right: 20px;
+    z-index: 999998;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: flex-end;
+    gap: 12px;
+}
+
+/* Main Button Style */
+.ucb-mobile-main-btn,
+.ucb-desktop-main-btn {
+    width: 65px;
+    height: 65px;
+    background: #1e73be;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 25px rgba(30, 115, 190, 0.4);
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.ucb-mobile-main-btn span,
+.ucb-desktop-main-btn span {
+    font-size: 32px;
+    color: #fff;
+    transition: transform 0.3s ease;
+}
+
+/* Sub-buttons Container */
+.ucb-mobile-sub-buttons,
+.ucb-desktop-sub-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    z-index: 5;
+}
+
+/* Toggle Logic for CLICKING / HOVER Mode */
+.ucb-mobile-mode-click .ucb-mobile-sub-buttons,
+.ucb-desktop-mode-click .ucb-desktop-sub-buttons {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px) scale(0.9);
+    pointer-events: none;
+}
+
+.ucb-mobile-mode-click.active .ucb-mobile-sub-buttons,
+.ucb-mobile-mode-click:hover .ucb-mobile-sub-buttons,
+.ucb-desktop-mode-click:hover .ucb-desktop-sub-buttons {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+/* ALWAYS MODE LOGIC (Now mainly for Desktop) */
+.ucb-desktop-mode-always .ucb-desktop-sub-buttons,
+.ucb-mobile-mode-always .ucb-mobile-sub-buttons {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    pointer-events: auto;
+}
+
+/* Hide labels by default in ALWAYS mode across platforms */
+.ucb-desktop-mode-always .ucb-label,
+.ucb-mobile-mode-always .ucb-label {
+    max-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    margin-right: 0;
+}
+
+.ucb-desktop-mode-always .ucb-sub-btn:hover .ucb-label,
+.ucb-mobile-mode-always .ucb-mobile-sub-btn:hover .ucb-label {
+    max-width: 250px;
+    opacity: 1;
+    margin-right: 15px;
+}
+
+/* CLICK MODE LOGIC: Labels show with pills by default */
+.ucb-desktop-mode-click .ucb-label,
+.ucb-mobile-mode-click .ucb-label {
+    opacity: 1;
+}
+
+/* The Pill Shape Item */
+.ucb-mobile-sub-btn,
+.ucb-sub-btn {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    background: #ffffff;
+    padding: 6px; /* Default circular padding */
+    border-radius: 50px;
+    text-decoration: none;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.12);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(0,0,0,0.05);
+    min-width: 52px; /* Ensure circular base */
+    height: 52px;
+    justify-content: center;
+}
+
+/* Ensure padding Adjusts when label appears (Click Mode) */
+.ucb-mobile-mode-click .ucb-mobile-sub-btn,
+.ucb-desktop-mode-click .ucb-sub-btn {
+    padding-left: 25px;
+    justify-content: flex-end;
+}
+
+/* Ensure padding Adjusts when label appears (Always Mode Hover) */
+.ucb-mobile-mode-always .ucb-mobile-sub-btn:hover,
+.ucb-desktop-mode-always .ucb-sub-btn:hover {
+    padding-left: 25px;
+    justify-content: flex-end;
+}
+
+.ucb-mobile-sub-btn:hover,
+.ucb-sub-btn:hover {
+    transform: translateX(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+    background: #fdfdfd;
+}
+
+/* Label inside Pell */
+.ucb-mobile-sub-btn .ucb-label,
+.ucb-sub-btn .ucb-label {
+    color: #333;
+    font-size: 15px;
+    font-weight: 600;
+    margin-right: 0; /* Default hidden margin */
+    white-space: nowrap;
+}
+
+/* Clicking/Hover labels always have margin */
+.ucb-mobile-mode-click .ucb-label,
+.ucb-desktop-mode-click .ucb-label,
+.ucb-mobile-sub-btn:hover .ucb-label,
+.ucb-sub-btn:hover .ucb-label {
+    margin-right: 15px;
+}
+
+/* Icon inside Pill */
+.ucb-mobile-sub-btn .ucb-icon,
+.ucb-sub-btn .ucb-icon {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    background: #f2f2f2;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: background 0.3s ease;
+}
+
+/* Main Button Centering Fix */
+.ucb-mobile-main-btn span,
+.ucb-desktop-main-btn span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    line-height: 1;
+}
+
+.ucb-icon svg, 
+.ucb-icon img {
+    width: 24px;
+    height: 24px;
+    display: block;
+}
+
+/* Handle Left Side Alignment */
+.ucb-mobile-container[style*="left"],
+.ucb-desktop-container[style*="left"] {
+    align-items: flex-start !important;
+}
+
+.ucb-desktop-container[style*="left"] .ucb-sub-btn,
+.ucb-mobile-container[style*="left"] .ucb-mobile-sub-btn {
+    flex-direction: row;
+    padding: 8px 25px 8px 8px;
+}
+
+.ucb-desktop-container[style*="left"] .ucb-label,
+.ucb-mobile-container[style*="left"] .ucb-label {
+    margin-right: 0;
+    margin-left: 15px;
+}
+
+/* Responsive */
+@media (min-width: 769px) {
+    .ucb-mobile-container { display: none; }
+}
+
+@media (max-width: 768px) {
+    .ucb-desktop-container { display: none; }
+}
