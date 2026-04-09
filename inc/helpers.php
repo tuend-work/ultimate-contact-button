@@ -27,6 +27,95 @@ function ucb_get_svg( $icon_name ) {
 }
 
 /**
+ * Get allowed SVG tags and attributes for wp_kses.
+ * Centralized so the same whitelist is used for BOTH sanitization and output escaping.
+ *
+ * @return array Allowed tags array for wp_kses.
+ */
+function ucb_allowed_svg_tags() {
+	return array(
+		'svg'      => array(
+			'class'           => true,
+			'aria-hidden'     => true,
+			'aria-labelledby' => true,
+			'role'            => true,
+			'viewbox'         => true,
+			'xmlns'           => true,
+			'width'           => true,
+			'height'          => true,
+			'fill'            => true,
+			'stroke'          => true,
+			'stroke-width'    => true,
+			'stroke-linecap'  => true,
+			'stroke-linejoin' => true,
+		),
+		'path'     => array(
+			'd'            => true,
+			'fill'         => true,
+			'stroke'       => true,
+			'stroke-width' => true,
+			'transform'    => true,
+		),
+		'circle'   => array(
+			'cx'           => true,
+			'cy'           => true,
+			'r'            => true,
+			'fill'         => true,
+			'stroke'       => true,
+			'stroke-width' => true,
+		),
+		'line'     => array(
+			'x1'           => true,
+			'y1'           => true,
+			'x2'           => true,
+			'y2'           => true,
+			'stroke'       => true,
+			'stroke-width' => true,
+		),
+		'polyline' => array(
+			'points'       => true,
+			'fill'         => true,
+			'stroke'       => true,
+			'stroke-width' => true,
+		),
+		'polygon'  => array(
+			'points'       => true,
+			'fill'         => true,
+			'stroke'       => true,
+			'stroke-width' => true,
+		),
+		'rect'     => array(
+			'x'            => true,
+			'y'            => true,
+			'width'        => true,
+			'height'       => true,
+			'rx'           => true,
+			'ry'           => true,
+			'fill'         => true,
+			'stroke'       => true,
+			'stroke-width' => true,
+			'transform'    => true,
+		),
+		'g'        => array(
+			'fill'      => true,
+			'stroke'    => true,
+			'transform' => true,
+			'id'        => true,
+		),
+		'defs'     => array(),
+	);
+}
+
+/**
+ * Get allowed button types.
+ *
+ * @return array List of valid button type slugs.
+ */
+function ucb_allowed_button_types() {
+	return array( 'phone', 'zalo', 'messenger', 'whatsapp', 'telegram', 'mail', 'custom' );
+}
+
+/**
  * Sanitize array recursively
  *
  * @param array $array Array to sanitize.
@@ -43,80 +132,14 @@ function ucb_sanitize_array( $array ) {
 			$sanitized[ $key ] = ucb_sanitize_array( $value );
 		} else {
 			if ( 'icon_svg' === $key ) {
-				// Allow SVG tags for the icon field
-				$sanitized[ $key ] = wp_kses( $value, array(
-					'svg'      => array(
-						'class'           => true,
-						'aria-hidden'     => true,
-						'aria-labelledby' => true,
-						'role'            => true,
-						'viewbox'         => true,
-						'xmlns'           => true,
-						'width'           => true,
-						'height'          => true,
-						'fill'            => true,
-						'stroke'          => true,
-						'stroke-width'    => true,
-						'stroke-linecap'  => true,
-						'stroke-linejoin' => true,
-						'style'           => true,
-					),
-					'path'     => array(
-						'd'    => true,
-						'fill' => true,
-						'stroke' => true,
-						'stroke-width' => true,
-						'transform' => true,
-					),
-					'circle'   => array(
-						'cx' => true,
-						'cy' => true,
-						'r'  => true,
-						'fill' => true,
-						'stroke' => true,
-						'stroke-width' => true,
-					),
-					'line'     => array(
-						'x1' => true,
-						'y1' => true,
-						'x2' => true,
-						'y2' => true,
-						'stroke' => true,
-						'stroke-width' => true,
-					),
-					'polyline' => array(
-						'points' => true,
-						'fill' => true,
-						'stroke' => true,
-						'stroke-width' => true,
-					),
-					'polygon'  => array(
-						'points' => true,
-						'fill' => true,
-						'stroke' => true,
-						'stroke-width' => true,
-					),
-					'rect'     => array(
-						'x'      => true,
-						'y'      => true,
-						'width'  => true,
-						'height' => true,
-						'rx'     => true,
-						'ry'     => true,
-						'fill'   => true,
-						'stroke' => true,
-						'stroke-width' => true,
-						'transform' => true,
-					),
-					'g'        => array(
-						'fill' => true,
-						'stroke' => true,
-						'transform' => true,
-						'id' => true,
-					),
-					'defs'     => array(),
-					'style'    => array(),
-				) );
+				$sanitized[ $key ] = wp_kses( $value, ucb_allowed_svg_tags() );
+			} elseif ( 'type' === $key ) {
+				// Validate against allowed types
+				$sanitized[ $key ] = in_array( $value, ucb_allowed_button_types(), true ) ? $value : 'custom';
+			} elseif ( 'link' === $key ) {
+				$sanitized[ $key ] = sanitize_text_field( $value );
+			} elseif ( 'icon_url' === $key ) {
+				$sanitized[ $key ] = esc_url_raw( $value );
 			} else {
 				$sanitized[ $key ] = sanitize_text_field( $value );
 			}

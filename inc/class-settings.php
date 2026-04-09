@@ -168,7 +168,7 @@ class UCB_Settings {
 	public function render_settings_page() {
 		?>
 		<div class="wrap ucb-admin-wrap">
-			<h1><?php _e( 'Ultimate Contact Button Settings', 'ultimate-contact-button' ); ?></h1>
+			<h1><?php esc_html_e( 'Ultimate Contact Button Settings', 'ultimate-contact-button' ); ?></h1>
 			<form method="post" action="options.php">
 				<?php
 				settings_fields( self::OPTION_NAME );
@@ -176,14 +176,14 @@ class UCB_Settings {
 				
 				<div class="ucb-tabs">
 					<nav class="ucb-tab-nav">
-						<a href="#tab-main" class="active"><?php _e( 'Main Contact Button', 'ultimate-contact-button' ); ?></a>
-						<a href="#tab-bottom"><?php _e( 'Bottom Mobile Menu', 'ultimate-contact-button' ); ?></a>
+						<a href="#tab-main" class="active"><?php esc_html_e( 'Main Contact Button', 'ultimate-contact-button' ); ?></a>
+						<a href="#tab-bottom"><?php esc_html_e( 'Bottom Mobile Menu', 'ultimate-contact-button' ); ?></a>
 					</nav>
 					
 					<div class="ucb-tab-content active" id="tab-main">
 						<?php do_settings_sections( 'ultimate-contact-button' ); ?>
 						<hr/>
-						<h3><?php _e( 'Main Button Items (Always visible or FAB)', 'ultimate-contact-button' ); ?></h3>
+						<h3><?php esc_html_e( 'Main Button Items (Always visible or FAB)', 'ultimate-contact-button' ); ?></h3>
 						<?php $this->render_main_manager(); ?>
 					</div>
 					
@@ -192,7 +192,7 @@ class UCB_Settings {
 						do_settings_sections( 'ultimate-contact-button-bottom' );
 						?>
 						<hr/>
-						<h3><?php _e( 'Bottom Menu Items', 'ultimate-contact-button' ); ?></h3>
+						<h3><?php esc_html_e( 'Bottom Menu Items', 'ultimate-contact-button' ); ?></h3>
 						<?php $this->render_bottom_menu_manager(); ?>
 					</div>
 				</div>
@@ -230,18 +230,18 @@ class UCB_Settings {
 								</div>
 								<div class="ucb-field-row ucb-upload-row">
 									<input type="text" class="ucb-img-url" name="<?php echo esc_attr( self::OPTION_NAME . "[main_buttons][$index][icon_url]" ); ?>" value="<?php echo isset( $button['icon_url'] ) ? esc_attr( $button['icon_url'] ) : ''; ?>" placeholder="Custom SVG URL" />
-									<button type="button" class="button ucb-upload-btn"><?php _e( 'Upload SVG', 'ultimate-contact-button' ); ?></button>
+									<button type="button" class="button ucb-upload-btn"><?php esc_html_e( 'Upload SVG', 'ultimate-contact-button' ); ?></button>
 								</div>
 								<div class="ucb-field-row ucb-svg-row">
 									<textarea name="<?php echo esc_attr( self::OPTION_NAME . "[main_buttons][$index][icon_svg]" ); ?>" placeholder="Or Paste Custom SVG Code here"><?php echo isset( $button['icon_svg'] ) ? esc_textarea( $button['icon_svg'] ) : ''; ?></textarea>
 								</div>
 							</div>
-							<button type="button" class="ucb-remove-item button-link-delete"><?php _e( 'Remove', 'ultimate-contact-button' ); ?></button>
+							<button type="button" class="ucb-remove-item button-link-delete"><?php esc_html_e( 'Remove', 'ultimate-contact-button' ); ?></button>
 						</li>
 					<?php endforeach; ?>
 				<?php endif; ?>
 			</ul>
-			<button type="button" class="button tagadd" id="ucb-add-desktop-item"><?php _e( 'Add Button', 'ultimate-contact-button' ); ?></button>
+			<button type="button" class="button tagadd" id="ucb-add-desktop-item"><?php esc_html_e( 'Add Button', 'ultimate-contact-button' ); ?></button>
 		</div>
 		<?php
 	}
@@ -284,7 +284,7 @@ class UCB_Settings {
 					<?php endforeach; ?>
 				<?php endif; ?>
 			</ul>
-			<button type="button" class="button tagadd" id="ucb-add-mobile-item"><?php _e( 'Add Mobile Button', 'ultimate-contact-button' ); ?></button>
+			<button type="button" class="button tagadd" id="ucb-add-mobile-item"><?php esc_html_e( 'Add Mobile Button', 'ultimate-contact-button' ); ?></button>
 		</div>
 		<?php
 	}
@@ -299,11 +299,21 @@ class UCB_Settings {
 			}
 		}
 
-		$texts = array( 'main_display_mode', 'position_side', 'main_button_color' );
-		foreach ( $texts as $text ) {
-			if ( isset( $input[ $text ] ) ) {
-				$output[ $text ] = sanitize_text_field( $input[ $text ] );
-			}
+		// Whitelist-validate select fields
+		$allowed_sides = array( 'left', 'right' );
+		if ( isset( $input['position_side'] ) ) {
+			$output['position_side'] = in_array( $input['position_side'], $allowed_sides, true ) ? $input['position_side'] : 'right';
+		}
+
+		$allowed_modes = array( 'always', 'click' );
+		if ( isset( $input['main_display_mode'] ) ) {
+			$output['main_display_mode'] = in_array( $input['main_display_mode'], $allowed_modes, true ) ? $input['main_display_mode'] : 'click';
+		}
+
+		// Validate color as hex
+		if ( isset( $input['main_button_color'] ) ) {
+			$color = sanitize_hex_color( $input['main_button_color'] );
+			$output['main_button_color'] = $color ? $color : '#1e73be';
 		}
 
 		$ints = array( 'bottom_distance', 'side_distance' );

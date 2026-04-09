@@ -52,7 +52,7 @@ class UCB_Frontend {
 		$style = "bottom: {$bottom}px; {$side}: {$margin}px;";
 		$style .= ( 'left' === $side ) ? 'align-items: flex-start;' : 'align-items: flex-end;';
 
-		$first_icon = ! empty( $buttons[0]['icon_url'] ) ? '<img src="' . esc_url( $buttons[0]['icon_url'] ) . '" />' : (!empty($buttons[0]['icon_svg']) ? $buttons[0]['icon_svg'] : ucb_get_svg( $buttons[0]['type'] ));
+		$first_icon = $this->get_safe_icon( $buttons[0] );
 
 		echo '<div class="' . esc_attr( $container_class ) . '" style="' . esc_attr( $style ) . '">';
 		echo '<div class="ucb-main-trigger" style="background-color: ' . esc_attr( $main_color ) . ';"><span>' . $first_icon . '</span></div>';
@@ -62,15 +62,7 @@ class UCB_Frontend {
 		
 		foreach ( $buttons as $button ) {
 			$link = $this->get_link( $button['type'], $button['link'] );
-			
-			// Icon priority: URL > Code > Library
-			if ( ! empty( $button['icon_url'] ) ) {
-				$icon = '<img src="' . esc_url( $button['icon_url'] ) . '" alt="' . esc_attr( $button['label'] ) . '" />';
-			} elseif ( ! empty( $button['icon_svg'] ) ) {
-				$icon = $button['icon_svg'];
-			} else {
-				$icon = ucb_get_svg( $button['type'] );
-			}
+			$icon = $this->get_safe_icon( $button );
 
 			$btn_class = "ucb-sub-btn ucb-btn-{$button['type']}";
 			if ( 'left' === $side ) {
@@ -78,7 +70,7 @@ class UCB_Frontend {
 			}
 			?>
 			<a href="<?php echo esc_url( $link ); ?>" class="<?php echo esc_attr( $btn_class ); ?>" target="_blank">
-				<span class="ucb-icon"><?php echo $icon; ?></span>
+				<span class="ucb-icon"><?php echo $icon; // Already escaped by get_safe_icon ?></span>
 				<span class="ucb-label"><?php echo esc_html( $button['label'] ); ?></span>
 			</a>
 			<?php
@@ -98,17 +90,10 @@ class UCB_Frontend {
 		
 		foreach ( $buttons as $button ) {
 			$link = $this->get_link( $button['type'], $button['link'] );
-			
-			if ( ! empty( $button['icon_url'] ) ) {
-				$icon = '<img src="' . esc_url( $button['icon_url'] ) . '" alt="' . esc_attr( $button['label'] ) . '" />';
-			} elseif ( ! empty( $button['icon_svg'] ) ) {
-				$icon = $button['icon_svg'];
-			} else {
-				$icon = ucb_get_svg( $button['type'] );
-			}
+			$icon = $this->get_safe_icon( $button );
 			?>
 			<a href="<?php echo esc_url( $link ); ?>" class="ucb-bottom-menu-item" target="_blank">
-				<span class="ucb-menu-icon"><?php echo $icon; ?></span>
+				<span class="ucb-menu-icon"><?php echo $icon; // Already escaped by get_safe_icon ?></span>
 				<span class="ucb-menu-label"><?php echo esc_html( $button['label'] ); ?></span>
 			</a>
 			<?php
@@ -117,22 +102,48 @@ class UCB_Frontend {
 		echo '</div>'; // End container
 	}
 
+	/**
+	 * Get a safe, escaped icon for output.
+	 * Priority: icon_url > icon_svg > built-in library.
+	 *
+	 * @param array $button Button data array.
+	 * @return string Safe HTML for the icon.
+	 */
+	private function get_safe_icon( $button ) {
+		if ( ! empty( $button['icon_url'] ) ) {
+			return '<img src="' . esc_url( $button['icon_url'] ) . '" alt="' . esc_attr( isset( $button['label'] ) ? $button['label'] : '' ) . '" />';
+		} elseif ( ! empty( $button['icon_svg'] ) ) {
+			// Late escaping: re-apply wp_kses with the centralized whitelist
+			return wp_kses( $button['icon_svg'], ucb_allowed_svg_tags() );
+		} else {
+			// Built-in icons are hardcoded and trusted, but still escape for safety
+			return wp_kses( ucb_get_svg( $button['type'] ), ucb_allowed_svg_tags() );
+		}
+	}
+
+	/**
+	 * Build link URL based on button type.
+	 *
+	 * @param string $type  Button type slug.
+	 * @param string $value User-provided value (phone number, username, URL, etc).
+	 * @return string Safe URL.
+	 */
 	private function get_link( $type, $value ) {
 		switch ( $type ) {
 			case 'phone':
-				return 'tel:' . $value;
+				return 'tel:' . preg_replace( '/[^\d+\-\s()]/', '', $value );
 			case 'mail':
-				return 'mailto:' . $value;
+				return 'mailto:' . sanitize_email( $value );
 			case 'messenger':
-				return 'https://m.me/' . $value;
+				return 'https://m.me/' . sanitize_text_field( $value );
 			case 'zalo':
-				return 'https://zalo.me/' . $value;
+				return 'https://zalo.me/' . sanitize_text_field( $value );
 			case 'whatsapp':
-				return 'https://wa.me/' . $value;
+				return 'https://wa.me/' . sanitize_text_field( $value );
 			case 'telegram':
-				return 'https://t.me/' . $value;
+				return 'https://t.me/' . sanitize_text_field( $value );
 			default:
-				return $value;
+				return esc_url_raw( $value );
 		}
 	}
 }
