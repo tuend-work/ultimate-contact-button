@@ -16,7 +16,7 @@ add_action( 'admin_init', 'ucb_handle_update' );
 
 function ucb_render_update_button() {
 	$screen = get_current_screen();
-	if ( 'toplevel_page_ultimate-contact-button' !== $screen->id ) {
+	if ( 'ultimate-wp_page_ultimate-contact-button' !== $screen->id ) {
 		return;
 	}
 

@@ -3,7 +3,7 @@
  * Plugin Name: Ultimate WP Contact Button
  * Plugin URI:  https://profiles.wordpress.org/nguyenductue/
  * Description: A professional contact button manager for Desktop and Mobile.
- * Version:     2.3.3
+ * Version:     2.3.4
  * Author:      Nguyễn Đức Tuệ
  * Author URI:  https://profiles.wordpress.org/nguyenductue/
  * License:     GPL-2.0+	
@@ -27,7 +27,7 @@ final class Ultimate_Contact_Button {
 	 *
 	 * @var string
 	 */
-	const VERSION = '2.3.3';
+	const VERSION = '2.3.4';
 
 	/**
 	 * Instance of this class

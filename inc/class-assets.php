@@ -16,7 +16,7 @@ class UCB_Assets {
 
 	public function enqueue_admin_assets( $hook ) {
 		// Only load on our settings page
-		if ( 'toplevel_page_ultimate-contact-button' !== $hook ) {
+		if ( 'ultimate-wp_page_ultimate-contact-button' !== $hook ) {
 			return;
 		}
 
